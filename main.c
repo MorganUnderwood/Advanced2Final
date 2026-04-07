@@ -83,7 +83,10 @@ void planetDraw (SDL_Renderer *render, Planet p, int x, int y){//takes the value
     
 int main() {
 
-
+if (SDL_Init(SDL_INIT_VIDEO) <0) {
+    printf ("SDL Init Failed: %s\n", SDL_GetError());
+    return EXIT_FAILURE;
+}
     
     SDL_Window *window = SDL_CreateWindow(
         "Planetarium",
@@ -120,7 +123,7 @@ int main() {
         {"Uranus", 380, 0, 0.0001905, 9, {175, 229, 238, 255}},
         {"Neptune", 450,0, 0.00006068, 9, {91, 93, 223, 255}}
     };
-    for (int i; i<PLANETS; i++){ //takes days since epoch time and multiplies it by the orbital speed of each planet.
+    for (int i=0;i<PLANETS; i++){ //takes days since epoch time and multiplies it by the orbital speed of each planet.
         double angleCalculated = fmod(daysSinceEpoch*planets[i].speed, 360);
 
         if (angleCalculated < 0) angleCalculated+= 360.0;
@@ -195,32 +198,10 @@ int main() {
  
     
     
-        /* THIS FUNCTION WILL SET THE ANGLE STARTING AT MINUSDAYS WILL SIMULATE TO FINISH DAY WITH A 500MS DELAY IT PROBABLY WON'T WORK RIGHT NOW HAVE TO CHANGE DAY AND ANGLE CALCS
-         * //HAVE TO ADD QUIT COMMAND TO FUNCTION AS WELL FOR Q AND ESCAPE WITH DELAY FUNCTION.
-     * 
-     * 
-     * if (button == true){
-     * int start = minusDays;
-     * int finish = plusDays;
-     * while (start < finish) {
-     * for (int i; i<PLANETS;i++){
-     * planets[i].angle = 0;
-     * double angleCalculated = fmod(start*planets[i].speed, 360);
-     *         if (angleCalculated < 0) angleCalculated+= 360.0;
-
-        if (angleCalculated < 0){
-			angleCalculated+= 360.0;
-		}
-        planets[i].angle = angleCalculated;
-      * *planetDraw (renderer, planets[i], center[0], center[1]); //draw the planets relative to the sun
-      *  updatePosition(&planets[i]); //update the position of the planets.
-        * }
-        * start++;
-        * delay(500);
-        * simulatedDays = simulatedDays + SECONDS_IN_DAY;
-        * formateDate (simulatedDays, simulated);
-     *}
-     *} */
+        // THIS FUNCTION WILL SET THE ANGLE STARTING AT MINUSDAYS WILL SIMULATE TO FINISH DAY WITH A 500MS DELAY IT PROBABLY WON'T WORK RIGHT NOW HAVE TO CHANGE DAY AND ANGLE CALCS
+          //HAVE TO ADD QUIT COMMAND TO FUNCTION AS WELL FOR Q AND ESCAPE WITH DELAY FUNCTION.
+      
+      
 
 	
 	
@@ -240,7 +221,7 @@ int main() {
             
         }
     }
-    //SETUP THE CONSTANT DRAWS HERE TO TRY TO SAVE MEMORY (labels/sun).
+  
        
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Clear the window so it becomes black.
         SDL_RenderClear(renderer); //clear the renderer so there is no black leftover or any issues that may come with that.
@@ -264,24 +245,55 @@ int main() {
     //TEXT RENDERER for all besides simulated.
   
   RenderText (renderer, font,current, future, past, textWidth);
+  CircleFunction(renderer, center[0], center[1], 25, (SDL_Color){255, 255, 0 , 255}); //Draw the sun at the center of the window
   
- 
- 
-  
-  
+        if (button == true){
+      simulated[0] = "";
+      int start = daysSinceEpoch - minusDays;
+      int finish = daysSinceEpoch + plusDays;
+      
+      while (start < finish) {
+      for (int i=0; i<PLANETS;i++){
+      planets[i].angle = 0;
+      double angleCalculated = fmod(start*planets[i].speed, 360);
+              if (angleCalculated < 0) angleCalculated+= 360.0;
+
+        if (angleCalculated < 0){
+			angleCalculated+= 360.0;
+		}
+        planets[i].angle = angleCalculated;
+        planetDraw (renderer, planets[i], center[0], center[1]); //draw the planets relative to the sun
+        updatePosition(&planets[i]); //update the position of the planets.
+        }
+        start++;
+         SDL_RenderPresent(renderer);
+        SDL_Delay(16); //16 will give ~60fps if we are having issues can cut to 33 for 30fps and it will still be fairly smooth.
+         simulatedDays = simulatedDays + SECONDS_IN_DAY;
+         formatDate (simulatedDays, simulated);
+     }
+     }
+     if (button == false) {
+         simulated[25] = "Not Currently Simulating";
+         simulatedDate (renderer, font, simulated, textWidth);
+        
+         for (int i=0; i<PLANETS; i++){
+             double angleCalculated = fmod (daysSinceEpoch * planets[i].speed, 360);
+             if (angleCalculated < 0) {
+                 angleCalculated +=360;
+              }
+              planets[i].angle = angleCalculated;
+              planetDraw (renderer, planets[i], center[0], center[1]);
+              updatePosition (&planets[i]);
+          }
+      }
+              
+
   
 
-CircleFunction(renderer, center[0], center[1], 25, (SDL_Color){255, 255, 0 , 255}); //Draw the sun at the center of the window
 
-for (int i=0; i<PLANETS; i++){ //Draws and updates the position of the 8 planets.
-    
-    planetDraw (renderer, planets[i], center[0], center[1]); //draw the planets relative to the sun
-    updatePosition(&planets[i]); //update the position of the planets.
-}
 
 SDL_RenderPresent(renderer);
-SDL_Delay(16); //16 will give ~60fps if we are having issues can cut to 33 for 30fps and it will still be fairly smooth.
-
+        SDL_Delay(16); //16 will give ~60fps if we are having issues can cut to 33 for 30fps and it will still be fairly smooth.
 
 
     }
@@ -289,6 +301,8 @@ SDL_Delay(16); //16 will give ~60fps if we are having issues can cut to 33 for 3
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+    TTF_CloseFont (font);
+    TTF_Quit();
 
     return 0;
 }
