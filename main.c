@@ -1,15 +1,8 @@
-/*TODO (on just code).
--Integration of the time with potentiometers.
--Using the date calculations to multiply by the angle and then simulating movement when button pressed 
-	since it just runs non-stop at the moment (probably use a keyboard key to test this).
--Cleanup this Graphics.c file up to a main.c and make some more .c and .h files as well 
-	as removing more magic numbers that were used for testing and fix comments to make them better 
-	since some are notes or explanations to remind myself of the code when I would come back later
-	and for group members when they're reading through.
--Update the makefile with time_calc.c and after cleanup add the new .c files.
-(probably more I'm forgetting about).
-//Some scaling for different screen resolutions.
-* -Maybe planet jpegs if possible?
+/*TODO (listed from most important to least important).
+Change the speed parameters back to the real parameters instead of the slower parameters used for testing.
+Simulated buffer might need some fixing because I just put it there to test.
+Scaling options for different screen resolutions because it just forces 1920x1080 at the moment.
+Clean up the main because it's a mess (and still maybe add some more .c and .h files).
 */
 
 
@@ -18,7 +11,7 @@
 
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h> //requires libfreetype6-dev
+#include <SDL2/SDL_ttf.h> //requires libfreetype6-dev?
 #include <math.h>
 #include <stdbool.h>
 #include <time.h>
@@ -103,7 +96,7 @@ if (SDL_Init(SDL_INIT_VIDEO) <0) {
     }
        SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
     
-    //FUNCTION THAT RETURNS TIME SINCE JANUARY 1 1970 USED TO MULTIPLY BY PLANET SPEED TO SET COORDINATES.
+    //FUNCTION THAT RETURNS TIME SINCE JANUARY 1 1970 USED TO MULTIPLY BY PLANET SPEED AND ANGLE TO SET COORDINATES.
     
     time_t currentDate;
     time(&currentDate);
@@ -122,8 +115,9 @@ if (SDL_Init(SDL_INIT_VIDEO) <0) {
         {"Saturn", 310, 0, 0.0003898, 12, {206, 184, 184, 255}},
         {"Uranus", 380, 0, 0.0001905, 9, {175, 229, 238, 255}},
         {"Neptune", 450,0, 0.00006068, 9, {91, 93, 223, 255}}
+		//Planet, Distance from Sun, Initial angle(calculated below), Orbital speed, size, colour.
     };
-    for (int i=0;i<PLANETS; i++){ //takes days since epoch time and multiplies it by the orbital speed of each planet.
+    for (int i=0;i<PLANETS; i++){ //takes days since epoch time and multiplies it by the orbital speed of each planet which sets the angle of each planet.
         double angleCalculated = fmod(daysSinceEpoch*planets[i].speed, 360);
 
         if (angleCalculated < 0) angleCalculated+= 360.0;
