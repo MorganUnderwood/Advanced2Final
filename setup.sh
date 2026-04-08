@@ -10,5 +10,5 @@ echo "Finished"
 
 # To use either:
 #
-# chmod +x setup.ssh, then sudo ./setup.ssh
-# OR just sudo bash setup.ssh
+# chmod +x setup.sh, then sudo ./setup.sh
+# OR just sudo bash setup.sh
