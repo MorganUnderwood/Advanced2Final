@@ -1,6 +1,5 @@
 /*TODO (listed from most important to least important).
-Change the speed parameters back to the real parameters instead of the slower parameters used for testing.
-Simulated buffer might need some fixing because I just put it there to test.
+make drawHeight in an array and use it in a for loop to remove magic numbers and remove some lines of code in main.
 Scaling options for different screen resolutions because it just forces 1920x1080 at the moment.
 Clean up the main because it's a mess (and still maybe add some more .c and .h files).
 */
