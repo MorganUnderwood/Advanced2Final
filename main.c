@@ -1,5 +1,6 @@
 /*TODO (listed from most important to least important).
 make drawHeight in an array and use it in a for loop to remove magic numbers and remove some lines of code in main.
+possible a boolean variable that will go true on initial bootup and never go false to keep constant drawn elements that don't have to be re-drawn.
 Scaling options for different screen resolutions because it just forces 1920x1080 at the moment.
 Clean up the main because it's a mess (and still maybe add some more .c and .h files).
 */
