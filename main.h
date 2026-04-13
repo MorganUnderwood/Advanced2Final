@@ -11,13 +11,14 @@
 #include <wiringPi.h>
 #include <wiringSerial.h>
 
-#define PLANETS 8
+#define PLANETS 8 //Pluto doesn't count.
 #define PI 3.1415926535897932384626433832795
-#define SPEED_MULTIPLIER 1.0
+#define SPEED_MULTIPLIER 1.0 
 #define DEG_TO_RAD (PI /180)
-#define daysinYear 365
-#define LINEPOCH_J200 946684800 // conversion of linux epoch to j2000 epoch for planet calcs
+#define daysinYear 365.25
 #define MY_FONT "/usr/share/fonts/truetype/noto/NotoSansMono-Regular.ttf"
+
+/*define screen resolution */
 #define WIDTH 1920
 #define HEIGHT 1080
 
@@ -42,6 +43,7 @@ bool button = false;
 
 int center[2];
 
+/*planet struct definition */
 typedef struct {
   const char *name;
   double distanceFromSun;
@@ -53,14 +55,14 @@ typedef struct {
 } Planet;
 
 Planet planets[] = {
-    
+    /*name    ,distancefromsun, angle, speed, size, color, base angle (relative to January 1 2000)*/
     {"Mercury", 60, 0, 87.97, 4, {183, 184, 185, 255}, 252.25 *DEG_TO_RAD},
     {"Venus", 90, 0, 224.70, 6, {248, 226, 176, 255},181.98*DEG_TO_RAD},
     {"Earth", 130, 0, 365.25, 6, {0, 100, 255, 255}, 100.46*DEG_TO_RAD},
     {"Mars", 170, 0, 686.98, 5, {173, 98, 60, 255}, 355.43 *DEG_TO_RAD},
     {"Jupiter", 240, 0, 4332.82, 14, {227, 220, 209, 255}, 34.35*DEG_TO_RAD},
     {"Saturn", 310, 0, 10755.70, 12, {206, 184, 184, 255}, 50.09*DEG_TO_RAD},
-    {"Uranus", 380, 0, 30687.15, 6.83, {175, 229, 238, 255}, 314.06*DEG_TO_RAD}, //314.06 , 9
+    {"Uranus", 380, 0, 30687.15, 9, {175, 229, 238, 255}, 314.06*DEG_TO_RAD},
     {"Neptune", 450, 0, 60190.03, 9, {91, 93, 223, 255}, 304.35*DEG_TO_RAD}
     
 };
