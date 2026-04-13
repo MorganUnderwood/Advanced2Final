@@ -1,14 +1,22 @@
-#!/bin/bash
+!#/bin.bash
 
-echo "Updating..."
+echo "Updating...."
 sudo apt update
 
-echo "Installing necessary libraries..."
-sudo apt install -y libsdl2-dev
 
-echo "Finished!"
+echo "SDL Libraries."
 
-# To use, either:
+sudo apt install -y libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev git
+
+echo "Installing WiringPi.h"
+git clone https://github.com/WiringPi/WiringPi
+cd WiringPi
+./build
+
+echo
+"Finished!"
+
+#to use either:
 #
-# chmod +x setup.sh, then sudo ./setup.sh
-# OR just sudo bash setup.sh
+#chmod x+ setup.sh, then sudo ./setup.sh
+OR sudo bash setup.sh
